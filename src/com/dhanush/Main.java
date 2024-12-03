@@ -1,36 +1,64 @@
 package com.dhanush;
 
+import java.util.Scanner;
+
 import static com.dhanush.Robot.*;
 
 public class Main
 {
     public static void main(String[] args) {
 
-        //Inputs for Robot1
-        Robot robot1 = new Robot();
-        robot1.setLength(5);
-        robot1.setBreadth(5);
+        Scanner scanner = new Scanner(System.in);
 
-        robot1.setPosX(1);
-        robot1.setPosY(0);
+        int length = scanner.nextInt();
+        int breadth = scanner.nextInt();
+        scanner.nextLine();
 
-        robot1.setCurrentDirection(Direction.North);
-        String robot1Movement = "MMRMMLMMR";
+        while(scanner.hasNext()){
+            Robot robot = new Robot();
+            robot.setLength(length);
+            robot.setBreadth(breadth);
 
-        Robot robot2 = new Robot();
-        robot2.setLength(5);
-        robot2.setBreadth(5);
-        robot2.setPosX(3);
-        robot2.setPosY(2);
-        robot2.setCurrentDirection(Direction.East);
-        String robot2Movement = "MLLMMRMM";
+            int positionX = scanner.nextInt();
+            int positionY = scanner.nextInt();
+            robot.setPosX(positionX);
+            robot.setPosY(positionY);
 
-        System.out.println(FinalPosition(robot1, robot1Movement));
-        System.out.println(FinalPosition(robot2, robot2Movement));
+            String direction = scanner.nextLine().strip();
+            if (direction.equals("N")) {
+                robot.setCurrentDirection(Direction.North);
+            } else if (direction.equals("S")) {
+                robot.setCurrentDirection(Direction.South);
+            } else if (direction.equals("E")){
+                robot.setCurrentDirection(Direction.East);
+            } else if (direction.equals("W")) {
+                robot.setCurrentDirection(Direction.West);
+            } else {
+                throw new IllegalArgumentException("Given input " +
+                        "direction is invalid!");
+            }
+            String movement = scanner.nextLine();
+            System.out.println(FinalPosition(robot, movement));
+        }
+
     }
 
+    /*
+        -The final output should be a string with the format
+        "posX posY direction", where each value is separated by a space.
+        -The function will accept two parameters: currentRobot and robotMovement.
+        -Since there can be multiple robots, the currentRobot parameter
+         ensures that the code remains consistent for all robots.
+        -The robot's movement may differ for each robot, so the robotMovement
+         parameter is passed alongside the currentRobot to reflect the
+         specific movement instructions for each individual robot.
+     */
     private static String FinalPosition(Robot currentRobot, String robotMovement) {
 
+        /*
+            using Enhanced-for-loop to loop around the characters of the
+            Robot's movement
+         */
         for (char ch: robotMovement.toCharArray()){
             Robot.Direction currentDirection =  currentRobot.getCurrentDirection();
             Robot.Direction newDirection;
@@ -51,19 +79,18 @@ public class Main
                     newDirection = currentDirection.getRightDirection();
                     currentRobot.setCurrentDirection(newDirection);
                     break;
+
                 case 'L':
                     newDirection = currentDirection.getLeftDirection();
                     currentRobot.setCurrentDirection(newDirection);
                     break;
 
                 default:
-                    System.out.println("Invalid robot movement");
-                    break;
+                    throw new IllegalArgumentException("Invalid robot movement");
             }
         }
 
         String finalPosition = currentRobot.getPosX()+" "+currentRobot.getPosY()+" "+currentRobot.getCurrentDirection();
-
         return finalPosition;
 
     }

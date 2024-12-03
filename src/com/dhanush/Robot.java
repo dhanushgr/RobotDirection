@@ -103,7 +103,4 @@ public class Robot {
         this.posY = this.posY - 1;
     }
 
-
-
 }
-
